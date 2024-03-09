@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {ListItem, Teams as TeamsList} from 'types';
+import SearchInput from 'components/SearchInput';
 import {getTeams as fetchTeams} from '../api';
 import Header from '../components/Header';
 import List from '../components/List';
@@ -25,6 +26,11 @@ var MapT = (teams: TeamsList[]) => {
 const Teams = () => {
     const [teams, setTeams] = React.useState<any>([]);
     const [isLoading, setIsLoading] = React.useState<any>(true);
+    const [searchInputValue, setSearchInputValue] = React.useState<string>('');
+
+    const filteredTeams = searchInputValue.length > 0
+        ? teams.filter(team => team.name.toLowerCase().includes(searchInputValue.toLowerCase()))
+        : teams;
 
     React.useEffect(() => {
         const getTeams = async () => {
@@ -38,7 +44,11 @@ const Teams = () => {
     return (
         <Container>
             <Header title="Teams" showBackButton={false} />
-            <List items={MapT(teams)} isLoading={isLoading} />
+            <SearchInput
+                value={searchInputValue}
+                onChange={(event) => setSearchInputValue(event.target.value)}
+            />
+            <List items={MapT(filteredTeams)} isLoading={isLoading} />
         </Container>
     );
 };

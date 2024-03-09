@@ -1,11 +1,14 @@
 import * as React from 'react';
 import {useLocation, useParams} from 'react-router-dom';
 import {ListItem, UserData} from 'types';
+import SearchInput from 'components/SearchInput';
 import {getTeamOverview, getUserData} from '../api';
 import Card from '../components/Card';
 import {Container} from '../components/GlobalComponents';
 import Header from '../components/Header';
 import List from '../components/List';
+
+const teamUserName = ({firstName, lastName}) => `${firstName} ${lastName}`;
 
 var mapArray = (users: UserData[]) => {
     return users.map(u => {
@@ -64,6 +67,14 @@ const TeamOverview = () => {
     const {teamId} = useParams();
     const [pageData, setPageData] = React.useState<PageState>({});
     const [isLoading, setIsLoading] = React.useState<boolean>(true);
+    const [searchInputValue, setSearchInputValue] = React.useState<string>('');
+
+    const filteredTeamLead = searchInputValue.length === 0 || teamUserName(pageData.teamLead).toLowerCase().includes(searchInputValue.toLowerCase())
+        ? pageData?.teamLead
+        : null;
+    const filteredTeamMembers = searchInputValue.length > 0
+        ? pageData?.teamMembers.filter(user => `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchInputValue.toLowerCase()))
+        : pageData?.teamMembers;
 
     React.useEffect(() => {
         var getTeamUsers = async () => {
@@ -87,8 +98,14 @@ const TeamOverview = () => {
     return (
         <Container>
             <Header title={`Team ${location.state.name}`} />
-            {!isLoading && mapTLead(pageData.teamLead)}
-            <List items={mapArray(pageData?.teamMembers ?? [])} isLoading={isLoading} />
+            {!isLoading && (
+                <SearchInput
+                    value={searchInputValue}
+                    onChange={(event) => setSearchInputValue(event.target.value)}
+                />
+            )}
+            {!isLoading && filteredTeamLead && mapTLead(filteredTeamLead)}
+            <List items={mapArray(filteredTeamMembers ?? [])} isLoading={isLoading} />
         </Container>
     );
 };
