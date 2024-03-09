@@ -9,7 +9,7 @@ const SearchInput = (props: InputHTMLAttributes<HTMLInputElement>) => {
             <Input
                 {...props}
                 data-testid={`searchInput-${props.name}`}
-                placeholder="Pesquisar"
+                placeholder="Search"
                 type="search"
             />
         </Container>
