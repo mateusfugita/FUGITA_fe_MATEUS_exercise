@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 
-export const Container = styled.div<{hasNavigation: boolean}>`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+import {Container} from 'components/GlobalComponents';
+
+export const CardContainer = styled(Container)<{hasNavigation: boolean}>`
+    flex: none;
     border: 1px solid black;
     background: #ddd;
     padding: 20px;

@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
-export const HeaderContainer = styled.div`
+import {Container} from 'components/GlobalComponents';
+
+export const HeaderContainer = styled(Container)`
     height: 100px;
     margin: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex: none;
     justify-content: space-between;
 `;
 

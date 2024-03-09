@@ -2,7 +2,7 @@ import * as React from 'react';
 import {ListItem} from 'types';
 import Card from '../Card';
 import {Spinner} from '../Spinner';
-import {Container} from './styles';
+import {ListContainer} from './styles';
 
 interface Props {
     items?: ListItem[];
@@ -12,7 +12,7 @@ interface Props {
 
 const List = ({items, hasNavigation = true, isLoading}: Props) => {
     return (
-        <Container>
+        <ListContainer>
             {isLoading && <Spinner />}
             {!isLoading &&
                 items.map(({url, id, columns, navigationProps}, index) => {
@@ -27,7 +27,7 @@ const List = ({items, hasNavigation = true, isLoading}: Props) => {
                         />
                     );
                 })}
-        </Container>
+        </ListContainer>
     );
 };
 
