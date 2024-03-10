@@ -8,7 +8,7 @@ import {Container} from '../components/GlobalComponents';
 import Header from '../components/Header';
 import List from '../components/List';
 
-const getTeamUserName = ({firstName, lastName}) => `${firstName} ${lastName}`;
+const getUserFullName = ({firstName, lastName}) => `${firstName} ${lastName}`;
 
 const mapUsersList = (users: UserData[]) => {
     return users.map(user => {
@@ -70,11 +70,11 @@ const TeamOverview = () => {
     const [searchInputValue, setSearchInputValue] = React.useState<string>('');
 
     const filteredTeamLead =
-        searchInputValue.length === 0 || getTeamUserName(pageData.teamLead).toLowerCase().includes(searchInputValue.toLowerCase())
+        searchInputValue.length === 0 || getUserFullName(pageData.teamLead).toLowerCase().includes(searchInputValue.toLowerCase())
         ? pageData?.teamLead
         : null;
     const filteredTeamMembers = searchInputValue.length > 0
-        ? pageData?.teamMembers.filter(user => `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchInputValue.toLowerCase()))
+        ? pageData?.teamMembers.filter(user => getUserFullName(user).toLowerCase().includes(searchInputValue.toLowerCase()))
         : pageData?.teamMembers;
 
     React.useEffect(() => {
