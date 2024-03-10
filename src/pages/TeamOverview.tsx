@@ -1,12 +1,14 @@
 import * as React from 'react';
 import {useLocation, useParams} from 'react-router-dom';
 import {ListItem, UserData} from 'types';
+
+import {getTeamOverview, getUserData} from 'api';
 import SearchInput from 'components/SearchInput';
-import {getTeamOverview, getUserData} from '../api';
-import Card from '../components/Card';
-import {Container} from '../components/GlobalComponents';
-import Header from '../components/Header';
-import List from '../components/List';
+import ErrorMessage from 'components/ErrorMessage';
+import Card from 'components/Card';
+import {Container} from 'components/GlobalComponents';
+import Header from 'components/Header';
+import List from 'components/List';
 
 const getUserFullName = ({firstName, lastName}) => `${firstName} ${lastName}`;
 
@@ -67,6 +69,7 @@ const TeamOverview = () => {
     const {teamId} = useParams();
     const [pageData, setPageData] = React.useState<PageState>({});
     const [isLoading, setIsLoading] = React.useState<boolean>(true);
+    const [isResponseError, setIsResponseError] = React.useState<boolean>(false);
     const [searchInputValue, setSearchInputValue] = React.useState<string>('');
 
     const filteredTeamLead =
@@ -79,19 +82,24 @@ const TeamOverview = () => {
 
     React.useEffect(() => {
         const getTeamUsers = async () => {
-            const {teamLeadId, teamMemberIds = []} = await getTeamOverview(teamId);
-            const teamLead = await getUserData(teamLeadId);
+            try {
+                const {teamLeadId, teamMemberIds = []} = await getTeamOverview(teamId);
+                const teamLead = await getUserData(teamLeadId);
 
-            const teamMembers = [];
-            for(const teamMemberId of teamMemberIds) {
-                const data = await getUserData(teamMemberId);
-                teamMembers.push(data);
+                const teamMembers = [];
+                for(const teamMemberId of teamMemberIds) {
+                    const data = await getUserData(teamMemberId);
+                    teamMembers.push(data);
+                }
+                setPageData({
+                    teamLead,
+                    teamMembers,
+                });
+            } catch (error) {
+                setIsResponseError(true);
+            } finally {
+                setIsLoading(false);
             }
-            setPageData({
-                teamLead,
-                teamMembers,
-            });
-            setIsLoading(false);
         };
         getTeamUsers();
     }, [teamId]);
@@ -99,14 +107,17 @@ const TeamOverview = () => {
     return (
         <Container>
             <Header title={`Team ${location.state.name}`} />
-            {!isLoading && (
-                <SearchInput
-                    name='userName'
-                    value={searchInputValue}
-                    onChange={(event) => setSearchInputValue(event.target.value)}
-                />
+            {isResponseError && <ErrorMessage />}
+            {!isLoading && !isResponseError && (
+                <React.Fragment>
+                    <SearchInput
+                        name='userName'
+                        value={searchInputValue}
+                        onChange={(event) => setSearchInputValue(event.target.value)}
+                    />
+                    {filteredTeamLead && mapTeamLead(filteredTeamLead)}
+                </React.Fragment>
             )}
-            {!isLoading && filteredTeamLead && mapTeamLead(filteredTeamLead)}
             <List items={mapUsersList(filteredTeamMembers ?? [])} isLoading={isLoading} />
         </Container>
     );
