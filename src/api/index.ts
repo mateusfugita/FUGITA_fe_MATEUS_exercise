@@ -5,6 +5,9 @@ const getData = async (path = '') => {
     const response = await fetch(url);
     const json = await response.json();
 
+    if(!json){
+        return Promise.reject();
+    }
     return json;
 };
 
