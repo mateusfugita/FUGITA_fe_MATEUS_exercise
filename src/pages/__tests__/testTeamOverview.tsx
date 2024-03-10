@@ -87,4 +87,30 @@ describe('TeamOverview', () => {
         fireEvent.change(screen.getByTestId('searchInput-userName'), {target: {value: 'firstName'}});
         expect(screen.queryAllByTestId(/cardContainer/)).toHaveLength(1);
     });
+
+    it('should render an error message when the getTeamOverview API fails to answer successfully', async () => {
+        jest.spyOn(API, 'getTeamOverview').mockRejectedValue(new Error());
+
+        render(<TeamOverview />);
+
+        await waitFor(() => {
+            expect(screen.getByText('An error occured while fetching the data, try again.')).toBeInTheDocument();
+        });
+    });
+
+    it('should render an error message when the getUserData API fails to answer successfully', async () => {
+        const teamOverview = {
+            id: '1',
+            teamLeadId: '2',
+            teamMemberIds: [],
+        };
+        jest.spyOn(API, 'getTeamOverview').mockResolvedValue(teamOverview);
+        jest.spyOn(API, 'getUserData').mockRejectedValueOnce(new Error());
+
+        render(<TeamOverview />);
+
+        await waitFor(() => {
+            expect(screen.getByText('An error occured while fetching the data, try again.')).toBeInTheDocument();
+        });
+    });
 });

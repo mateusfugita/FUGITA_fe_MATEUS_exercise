@@ -77,4 +77,14 @@ describe('Teams', () => {
         expect(screen.getByTestId('cardContainer-1')).toBeInTheDocument();
         expect(screen.queryByTestId('cardContainer-2')).not.toBeInTheDocument();
     });
+
+    it('should render an error message when the getTeams API fails to answer successfully', async () => {
+        jest.spyOn(API, 'getTeams').mockRejectedValue(new Error());
+
+        render(<Teams />);
+
+        await waitFor(() => {
+            expect(screen.getByText('An error occured while fetching the data, try again.')).toBeInTheDocument();
+        });
+    });
 });
