@@ -3,13 +3,15 @@ import styled from 'styled-components';
 import {Container} from 'components/GlobalComponents';
 
 export const HeaderContainer = styled(Container)`
-    height: 100px;
+    height: 50px;
     margin: 10px;
     flex: none;
     justify-content: space-between;
 `;
 
-export const Title = styled.h1``;
+export const Title = styled.h1`
+    color: ${props => props.theme['blue-700']};
+`;
 
 export const NavigationHeader = styled.div`
     display: flex;
