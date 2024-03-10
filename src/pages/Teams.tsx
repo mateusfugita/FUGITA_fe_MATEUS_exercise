@@ -46,6 +46,7 @@ const Teams = () => {
             <Header title="Teams" showBackButton={false} />
             {!isLoading && (
                 <SearchInput
+                    name='teamName'
                     value={searchInputValue}
                     onChange={(event) => setSearchInputValue(event.target.value)}
                 />

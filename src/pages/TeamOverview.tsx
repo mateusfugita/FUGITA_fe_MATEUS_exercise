@@ -101,6 +101,7 @@ const TeamOverview = () => {
             <Header title={`Team ${location.state.name}`} />
             {!isLoading && (
                 <SearchInput
+                    name='userName'
                     value={searchInputValue}
                     onChange={(event) => setSearchInputValue(event.target.value)}
                 />
