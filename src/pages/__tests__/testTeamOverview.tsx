@@ -58,7 +58,7 @@ describe('TeamOverview', () => {
             teamLeadId: '2',
             teamMemberIds: ['3'],
         };
-        const userData = {
+        const firstUserData = {
             id: '2',
             firstName: 'userData',
             lastName: 'userData',
@@ -66,17 +66,17 @@ describe('TeamOverview', () => {
             location: '',
             avatar: '',
         };
-        const userData2 = {
+        const secondUserData = {
             id: '3',
-            firstName: 'ABC',
-            lastName: 'userData',
-            displayName: 'userData',
+            firstName: 'firstName',
+            lastName: 'secondName',
+            displayName: 'firstSecond',
             location: '',
             avatar: '',
         };
         jest.spyOn(API, 'getTeamOverview').mockResolvedValue(teamOverview);
-        jest.spyOn(API, 'getUserData').mockResolvedValueOnce(userData);
-        jest.spyOn(API, 'getUserData').mockResolvedValueOnce(userData2);
+        jest.spyOn(API, 'getUserData').mockResolvedValueOnce(firstUserData);
+        jest.spyOn(API, 'getUserData').mockResolvedValueOnce(secondUserData);
 
         render(<TeamOverview />);
 
@@ -84,7 +84,7 @@ describe('TeamOverview', () => {
             expect(screen.queryAllByTestId(/cardContainer/)).toHaveLength(2);
         });
 
-        fireEvent.change(screen.getByTestId('searchInput-userName'), {target: {value: 'ABC'}});
+        fireEvent.change(screen.getByTestId('searchInput-userName'), {target: {value: 'firstName'}});
         expect(screen.queryAllByTestId(/cardContainer/)).toHaveLength(1);
     });
 });
