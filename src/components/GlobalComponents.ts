@@ -9,3 +9,9 @@ export const Container = styled.div`
     align-items: center;
     flex-direction: column;
 `;
+
+export const Input = styled.input`
+  border-radius: 8px;
+  width: 100%;
+  padding: 8px 12px;
+`;
