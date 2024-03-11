@@ -3,7 +3,9 @@ import React, {InputHTMLAttributes} from 'react';
 import {Container} from 'components/GlobalComponents';
 import {Input} from './styles';
 
-const SearchInput = (props: InputHTMLAttributes<HTMLInputElement>) => {
+type SearchInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>;
+
+const SearchInput = (props: SearchInputProps) => {
     return (
         <Container>
             <Input
