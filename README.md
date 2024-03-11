@@ -4,13 +4,28 @@
 
 ### Describe what you have improved in the solution
 
+The code improvements and the new features implementation are documeneted in this [file](https://docs.google.com/document/d/11lyLvXC6FqK1uqMqo1O58X0BRHuP353F6oz51GlCZ30/edit?usp=sharing).
+
 ## To Run the project you must run:
 
 ```
 npm install
 ```
 
-## after the installation finished, you can run:
+## After the installation finished, you can create the .env file:
+
+```
+cp .env.example .env
+```
+
+## Fill the .env file with the API URL
+
+```
+REACT_APP_API_BASE_URL=
+TSC_COMPILE_ON_ERROR=true
+```
+
+## Then you can run:
 
 ```
 npm start

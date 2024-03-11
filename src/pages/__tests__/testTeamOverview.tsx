@@ -1,12 +1,12 @@
 import * as React from 'react';
-import {render, screen, waitFor} from '@testing-library/react';
+import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import * as API from '../../api';
 import TeamOverview from '../TeamOverview';
 
 jest.mock('react-router-dom', () => ({
     useLocation: () => ({
         state: {
-            teamName: 'Some Team',
+            name: 'Some Team',
         },
     }),
     useNavigate: () => ({}),
@@ -42,13 +42,75 @@ describe('TeamOverview', () => {
             location: '',
             avatar: '',
         };
-        jest.spyOn(API, 'getTeamOverview').mockImplementationOnce(() => Promise.resolve({} as any));
-        jest.spyOn(API, 'getUserData').mockImplementationOnce(() => Promise.resolve({} as any));
+        jest.spyOn(API, 'getTeamOverview').mockResolvedValue(teamOverview);
+        jest.spyOn(API, 'getUserData').mockResolvedValue(userData);
 
         render(<TeamOverview />);
 
         await waitFor(() => {
             expect(screen.queryAllByText('userData')).toHaveLength(4);
+        });
+    });
+
+    it('should render filtered users list after change value of search input', async () => {
+        const teamOverview = {
+            id: '1',
+            teamLeadId: '2',
+            teamMemberIds: ['3'],
+        };
+        const firstUserData = {
+            id: '2',
+            firstName: 'userData',
+            lastName: 'userData',
+            displayName: 'userData',
+            location: '',
+            avatar: '',
+        };
+        const secondUserData = {
+            id: '3',
+            firstName: 'firstName',
+            lastName: 'secondName',
+            displayName: 'firstSecond',
+            location: '',
+            avatar: '',
+        };
+        jest.spyOn(API, 'getTeamOverview').mockResolvedValue(teamOverview);
+        jest.spyOn(API, 'getUserData').mockResolvedValueOnce(firstUserData);
+        jest.spyOn(API, 'getUserData').mockResolvedValueOnce(secondUserData);
+
+        render(<TeamOverview />);
+
+        await waitFor(() => {
+            expect(screen.queryAllByTestId(/cardContainer/)).toHaveLength(2);
+        });
+
+        fireEvent.change(screen.getByTestId('searchInput-userName'), {target: {value: 'firstName'}});
+        expect(screen.queryAllByTestId(/cardContainer/)).toHaveLength(1);
+    });
+
+    it('should render an error message when the getTeamOverview API fails to answer successfully', async () => {
+        jest.spyOn(API, 'getTeamOverview').mockRejectedValue(new Error());
+
+        render(<TeamOverview />);
+
+        await waitFor(() => {
+            expect(screen.getByText('An error occured while fetching the data, try again.')).toBeInTheDocument();
+        });
+    });
+
+    it('should render an error message when the getUserData API fails to answer successfully', async () => {
+        const teamOverview = {
+            id: '1',
+            teamLeadId: '2',
+            teamMemberIds: [],
+        };
+        jest.spyOn(API, 'getTeamOverview').mockResolvedValue(teamOverview);
+        jest.spyOn(API, 'getUserData').mockRejectedValueOnce(new Error());
+
+        render(<TeamOverview />);
+
+        await waitFor(() => {
+            expect(screen.getByText('An error occured while fetching the data, try again.')).toBeInTheDocument();
         });
     });
 });

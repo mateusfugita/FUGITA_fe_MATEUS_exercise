@@ -1,10 +1,7 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
-    flex: 1;
-    margin: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+import {Container} from 'components/GlobalComponents';
+
+export const ListContainer = styled(Container)`
+    flex-direction: row;
 `;

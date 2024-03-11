@@ -1,15 +1,17 @@
 import styled from 'styled-components';
 
-export const HeaderContainer = styled.div`
-    height: 100px;
+import {Container} from 'components/GlobalComponents';
+
+export const HeaderContainer = styled(Container)`
+    height: 50px;
     margin: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex: none;
     justify-content: space-between;
 `;
 
-export const Title = styled.h1``;
+export const Title = styled.h1`
+    color: ${props => props.theme['blue-700']};
+`;
 
 export const NavigationHeader = styled.div`
     display: flex;
